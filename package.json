@@ -20,6 +20,7 @@
 	},
 	"dependencies": {
 		"@svelteuidev/composables": "^0.12.1",
-		"@svelteuidev/core": "^0.12.1"
+		"@svelteuidev/core": "^0.12.1",
+		"dayjs": "^1.11.7"
 	}
 }
