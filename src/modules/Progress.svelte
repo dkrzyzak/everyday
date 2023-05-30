@@ -3,12 +3,10 @@
 	import { tweened } from 'svelte/motion';
 
 	export let value = 0;
-	let hslValue = 1.28 * value;
 	const progress = tweened(value);
 
 	afterUpdate(() => {
 		progress.set(value);
-		hslValue = 128 * value;
 	});
 </script>
 

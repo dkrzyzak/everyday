@@ -8,8 +8,7 @@
 	const dispatch = createEventDispatcher();
 
 	const onToggle = () => {
-		done = !done;
-		dispatch('toggleTask', done);
+		dispatch('toggleTask', !done);
 	};
 </script>
 

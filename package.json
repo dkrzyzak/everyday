@@ -10,17 +10,20 @@
 		"check": "svelte-check --tsconfig ./tsconfig.json"
 	},
 	"devDependencies": {
+		"@iconify-json/mdi": "^1.1.52",
 		"@sveltejs/vite-plugin-svelte": "^2.0.4",
 		"@tsconfig/svelte": "^4.0.1",
 		"svelte": "^3.58.0",
 		"svelte-check": "^3.3.1",
 		"tslib": "^2.5.0",
 		"typescript": "^5.0.2",
+		"unplugin-icons": "^0.16.1",
 		"vite": "^4.3.9"
 	},
 	"dependencies": {
 		"@svelteuidev/composables": "^0.12.1",
 		"@svelteuidev/core": "^0.12.1",
+		"axios": "^1.4.0",
 		"dayjs": "^1.11.7"
 	}
 }

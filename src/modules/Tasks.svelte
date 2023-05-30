@@ -1,11 +1,17 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Progress from './Progress.svelte';
 	import Task from './Task.svelte';
+	import { getAllTasks } from '../api/tasks';
 
 	interface Task {
 		name: string;
 		done: boolean;
 	}
+
+	// onMount(async () => {
+	// 	getAllTasks().then(console.log);
+	// });
 
 	let tasks: Task[] = [
 		{
@@ -26,10 +32,8 @@
 		},
 	];
 
-	let progress =
+	$: progress =
 		tasks.reduce((doneCount, task) => doneCount + Number(task.done), 0) / tasks.length;
-
-	console.log(progress);
 
 	const handleTaskToggle = (event: CustomEvent<boolean>, index: number) => {
 		const done = event.detail;
@@ -41,10 +45,6 @@
 				done,
 			};
 		});
-
-		progress =
-			tasks.reduce((doneCount, current) => doneCount + Number(current.done), 0) /
-			tasks.length;
 	};
 </script>
 
