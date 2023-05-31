@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Progress from './Progress.svelte';
+	import Progress from '../components/Progress.svelte';
 	import Task from './Task.svelte';
 	import { getAllTasks } from '../api/tasks';
 

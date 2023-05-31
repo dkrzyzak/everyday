@@ -19,7 +19,7 @@ export const addNewTask = async (taskName: string) => {
 
 		return false;
 	} catch (e) {
-		console.log(e);
+		console.log(e?.response?.data);
 		return false;
 	}
 };
