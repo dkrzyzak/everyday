@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { SvelteUIProvider } from '@svelteuidev/core';
-	import Day from './modules/Day.svelte';
-	import AddTask from './modules/AddTask.svelte';
+	import { Router, Route } from 'svelte-routing';
+	import ChecklistPage from './modules/ChecklistPage/ChecklistPage.svelte';
+	import EditTasksPage from './modules/EditTasksPage/EditTasksPage.svelte';
+
+	export let url = '/';
 </script>
 
 <SvelteUIProvider withGlobalStyles themeObserver={'dark'}>
-	<Day />
-	<AddTask />
+	<Router {url}>
+		<Route path="/edit"><EditTasksPage /></Route>
+		<Route path="/"><ChecklistPage /></Route>
+	</Router>
 </SvelteUIProvider>

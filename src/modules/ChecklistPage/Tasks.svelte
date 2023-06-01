@@ -1,17 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Progress from '../components/Progress.svelte';
+	import Progress from '../../components/Progress.svelte';
 	import Task from './Task.svelte';
-	import { getAllTasks } from '../api/tasks';
 
 	interface Task {
 		name: string;
 		done: boolean;
 	}
-
-	// onMount(async () => {
-	// 	getAllTasks().then(console.log);
-	// });
 
 	let tasks: Task[] = [
 		{

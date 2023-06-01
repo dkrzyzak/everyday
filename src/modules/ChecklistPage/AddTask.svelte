@@ -1,17 +1,16 @@
-<script>
+<script lang="ts">
 	import { Alert, Modal, Button, TextInput, Group } from '@svelteuidev/core';
-	import PlusIcon from '~icons/mdi/clipboard-plus';
 	import SuccessIcon from '~icons/mdi/check-circle';
 	import FailIcon from '~icons/mdi/close-circle';
-	import { addNewTask } from '../api/tasks';
+	import { addNewTask } from '../../api/tasks';
 
-	let opened = false;
+	export let modalOpened = false;
 	let taskName = '';
 	let success = false;
 	let errorMsg = '';
 
 	const closeModal = () => {
-		opened = false;
+		modalOpened = false;
 	};
 
 	const addTask = async () => {
@@ -43,7 +42,13 @@
 	};
 </script>
 
-<Modal {opened} centered on:close={closeModal} title="Dodaj zadanie!" size="xs">
+<Modal
+	opened={modalOpened}
+	centered
+	on:close={closeModal}
+	title="Dodaj zadanie!"
+	size="xs"
+>
 	<TextInput label="Nazwa zadania" bind:value={taskName} on:input={onInputChange} />
 
 	<Group grow position="center" style="margin-block: 10px;">
@@ -79,23 +84,3 @@
 		</Alert>
 	{/if}
 </Modal>
-
-<div class="modal-button-container">
-	<Button
-		on:click={() => {
-			opened = true;
-		}}
-		size="lg"
-	>
-		<PlusIcon style="font-size: 1.25em; margin-right: 5px;" />
-		Dodaj zadanie
-	</Button>
-</div>
-
-<style>
-	.modal-button-container {
-		position: absolute;
-		top: 20px;
-		right: 20px;
-	}
-</style>
