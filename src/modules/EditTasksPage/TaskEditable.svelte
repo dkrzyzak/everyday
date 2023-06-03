@@ -1,26 +1,67 @@
 <script lang="ts">
-	import { Badge, Button, Card, Group, Text } from '@svelteuidev/core';
+	import { Badge, Button, Text } from '@svelteuidev/core';
+	import DeleteIcon from '~icons/mdi/delete';
+	import { toggleActiveState, updateName } from '../../stores/updateTasks';
 
 	export let name = '';
 	export let active = false;
+	export let id = '';
+	const initialActive = active;
+	const initialName = name;
+	console.log(initialName, initialActive);
 
 	const onToggleActive = () => {
 		active = !active;
+
+		toggleActiveState(id, active);
+	};
+
+	const onNameBlur = (event: Event) => {
+		const target = event.target as HTMLDivElement;
+		updateName(id, initialName, target.textContent);
 	};
 </script>
 
-<Card shadow="sm" padding="lg" style="margin-bottom: 20px;">
-	<Card.Section>
-		<Group position="apart">
-			<Text size="xl" weight={500} contenteditable on:blur={console.log}>{name}</Text>
-			{#if active}
-				<Badge size="lg" variant="light" on:click={onToggleActive}>Aktywne</Badge>
-			{:else}
-				<Badge size="lg" color="gray" variant="light" on:click={onToggleActive}
-					>Nieaktywne</Badge
-				>
-			{/if}
-		</Group>
-	</Card.Section>
-	<!-- <Button variant="light" color="blue" fullSize>Book classic tour now</Button> -->
-</Card>
+<div class="task-container">
+	<Text size="xl" weight={500} contenteditable spellcheck={false} on:blur={onNameBlur}
+		>{name}</Text
+	>
+
+	<div class="buttons-container">
+		{#if active}
+			<Badge
+				size="lg"
+				variant="light"
+				style="cursor: pointer;"
+				on:click={onToggleActive}>Aktywne</Badge
+			>
+		{:else}
+			<Badge
+				size="lg"
+				color="gray"
+				variant="light"
+				style="cursor: pointer;"
+				on:click={onToggleActive}>Nieaktywne</Badge
+			>
+		{/if}
+		<Button size="sm" compact ripple radius="lg" color="red"><DeleteIcon /></Button>
+	</div>
+</div>
+
+<style>
+	.task-container {
+		margin-bottom: 20px;
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+	.buttons-container {
+		display: flex;
+		justify-content: end;
+		gap: 10px;
+		align-items: center;
+		min-width: 160px;
+	}
+</style>

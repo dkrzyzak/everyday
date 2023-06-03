@@ -25,6 +25,10 @@ export const addNewTask = async (taskName: string) => {
 	}
 };
 
+// export const updateTask = async () => {
+
+// }
+
 export const removeTask = async (id: string) => {
 	try {
 		const { status } = await axios.delete(`/tasks/${id}`);

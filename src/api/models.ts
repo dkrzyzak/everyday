@@ -1,6 +1,5 @@
 export interface ApiRecord {
-	_id: string;
-	__v: number;
+	_id?: string;
 }
 
 export interface Task extends ApiRecord {
