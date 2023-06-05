@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { Alert, Modal, Button, TextInput, Group } from '@svelteuidev/core';
 	import SuccessIcon from '~icons/mdi/check-circle';
 	import FailIcon from '~icons/mdi/close-circle';
 	import { addNewTask } from '../../api/tasks';
+	import { scale } from 'svelte/transition';
+
+	const dispatch = createEventDispatcher<{ refetchTasks: {} }>();
 
 	export let modalOpened = false;
 	let taskName = '';
@@ -10,6 +14,8 @@
 	let errorMsg = '';
 
 	const closeModal = () => {
+		success = false;
+		errorMsg = '';
 		modalOpened = false;
 	};
 
@@ -23,6 +29,7 @@
 			if (result) {
 				success = true;
 				taskName = '';
+				dispatch('refetchTasks');
 			} else {
 				errorMsg = 'Nie udało się dodać zadania. Sprawdź konsolę.';
 			}
@@ -57,30 +64,34 @@
 	</Group>
 
 	{#if success}
-		<Alert
-			icon={SuccessIcon}
-			title="Sukces!"
-			color="green"
-			withCloseButton
-			closeButtonLabel="Zamknij"
-			on:close={() => {
-				success = false;
-			}}>Dodano zadanie!</Alert
-		>
+		<div transition:scale>
+			<Alert
+				icon={SuccessIcon}
+				title="Sukces!"
+				color="green"
+				withCloseButton
+				closeButtonLabel="Zamknij"
+				on:close={() => {
+					success = false;
+				}}>Dodano zadanie!</Alert
+			>
+		</div>
 	{/if}
 
 	{#if errorMsg}
-		<Alert
-			icon={FailIcon}
-			title="Ajajaj"
-			color="red"
-			withCloseButton
-			closeButtonLabel="Zamknij"
-			on:close={() => {
-				errorMsg = '';
-			}}
-		>
-			{errorMsg}
-		</Alert>
+		<div transition:scale>
+			<Alert
+				icon={FailIcon}
+				title="Ajajaj"
+				color="red"
+				withCloseButton
+				closeButtonLabel="Zamknij"
+				on:close={() => {
+					errorMsg = '';
+				}}
+			>
+				{errorMsg}
+			</Alert>
+		</div>
 	{/if}
 </Modal>

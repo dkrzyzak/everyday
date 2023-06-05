@@ -21,5 +21,8 @@
 <style>
 	.day-container {
 		margin-top: 180px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 </style>

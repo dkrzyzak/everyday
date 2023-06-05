@@ -6,8 +6,6 @@
 	const formattedDate = dayjs(today).format('D MMMM YYYY');
 </script>
 
-<main>
-	<h1>{formattedDate}</h1>
+<h1>{formattedDate}</h1>
 
-	<Tasks />
-</main>
+<Tasks />

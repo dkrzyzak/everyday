@@ -1,57 +1,75 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onDestroy } from 'svelte';
 	import { scale } from 'svelte/transition';
-	import { Button, Container, Loader } from '@svelteuidev/core';
-	import { getAllTasks } from '../../api/tasks';
+	import { Button, Center, Loader } from '@svelteuidev/core';
+	import { removeTask } from '../../api/tasks';
 	import type { Task } from '../../api/models';
 	import TaskEditable from './TaskEditable.svelte';
 	import {
-		type UpdateTasksStore,
 		updateTasksStore,
 		haveUpdates,
-		mergeChanges,
 		resetTaskUpdateStore,
 	} from '../../stores/updateTasks';
+	import ConfirmDelete from './ConfirmDelete.svelte';
 
-	let tasks: Task[] = [];
+	const dispatch = createEventDispatcher<{ refetchTasks: {} }>();
 
-	let updatesStore: UpdateTasksStore;
+	let confirmDeleteModalOpened = false;
+	let taskToRemoveId = '';
 
-	const fetchTasks = async () => {
-		const fetchedTasks = await getAllTasks();
-		tasks = fetchedTasks;
+	export let tasks: Task[] = [];
+
+	const openConfirmDeleteModal = (event: CustomEvent<{ taskId: string }>) => {
+		confirmDeleteModalOpened = true;
+		taskToRemoveId = event.detail.taskId;
 	};
 
-	const unsubscribeTasksStore = updateTasksStore.subscribe((updateTasks) => {
-		updatesStore = updateTasks;
-		console.log(updateTasks);
-		console.log(mergeChanges(updateTasks));
-	});
+	const onConfirmDelete = async () => {
+		console.log(taskToRemoveId);
+		const success = await removeTask(taskToRemoveId);
 
-	onMount(async () => {
-		fetchTasks();
-	});
+		if (success) {
+			confirmDeleteModalOpened = false;
+			dispatch('refetchTasks');
+		} else {
+			// TODO: zareagować na ten błąd
+			console.log('lipton');
+		}
+	};
 
 	onDestroy(() => {
-		unsubscribeTasksStore();
 		resetTaskUpdateStore();
 	});
 </script>
 
-<Container size="md" override={{ display: 'flex', flexDirection: 'column' }}>
+<div class="task-list-container">
 	{#each tasks as { name, active, _id } (_id)}
-		<TaskEditable {name} {active} id={_id} />
+		<TaskEditable {name} {active} id={_id} on:deleteTask={openConfirmDeleteModal} />
 	{:else}
-		<Loader size="lg" variant="dots" />
+		<Center>
+			<Loader size="lg" variant="dots" />
+		</Center>
 	{/each}
-	{#if haveUpdates(updatesStore)}
+	{#if haveUpdates($updateTasksStore)}
 		<div transition:scale class="button-container">
 			<Button style="width: 100%;" color="violet" size="md">Zatwierdź zmiany</Button>
 		</div>
 	{/if}
-</Container>
+
+	<ConfirmDelete
+		bind:opened={confirmDeleteModalOpened}
+		on:confirmDelete={onConfirmDelete}
+	/>
+</div>
 
 <style>
+	.task-list-container {
+		padding-inline: 16px;
+		max-width: 960px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+	}
 	.button-container {
 		align-self: end;
 		width: 100%;

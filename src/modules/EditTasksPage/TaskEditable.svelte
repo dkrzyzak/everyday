@@ -2,6 +2,9 @@
 	import { Badge, Button, Text } from '@svelteuidev/core';
 	import DeleteIcon from '~icons/mdi/delete';
 	import { toggleActiveState, updateName } from '../../stores/updateTasks';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher<{ deleteTask: { taskId: string } }>();
 
 	export let name = '';
 	export let active = false;
@@ -19,6 +22,12 @@
 	const onNameBlur = (event: Event) => {
 		const target = event.target as HTMLDivElement;
 		updateName(id, initialName, target.textContent);
+	};
+
+	const onDeleteIconClick = () => {
+		dispatch('deleteTask', {
+			taskId: id,
+		});
 	};
 </script>
 
@@ -44,7 +53,14 @@
 				on:click={onToggleActive}>Nieaktywne</Badge
 			>
 		{/if}
-		<Button size="sm" compact ripple radius="lg" color="red"><DeleteIcon /></Button>
+		<Button
+			size="sm"
+			compact
+			ripple
+			radius="lg"
+			color="red"
+			on:click={onDeleteIconClick}><DeleteIcon /></Button
+		>
 	</div>
 </div>
 

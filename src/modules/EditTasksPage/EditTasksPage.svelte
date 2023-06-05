@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Button } from '@svelteuidev/core';
 	import { Link } from 'svelte-routing';
 	import PlusIcon from '~icons/mdi/clipboard-plus';
@@ -6,18 +7,33 @@
 	import RightCorner from '../../components/RightCorner.svelte';
 	import TasksList from './TasksList.svelte';
 	import AddTask from './AddTask.svelte';
+	import type { Task } from '../../api/models';
+	import { getAllTasks } from '../../api/tasks';
 
 	let modalOpened = false;
+
+	let tasks: Task[] = [];
+
+	const fetchTasks = async () => {
+		try {
+			const fetchedTasks = await getAllTasks();
+			tasks = fetchedTasks;
+		} catch {}
+	};
 
 	const onOpenModal = () => {
 		modalOpened = true;
 	};
+
+	onMount(async () => {
+		fetchTasks();
+	});
 </script>
 
 <main class="page-container">
 	<h1>Edytuj zadania</h1>
-	<TasksList />
-	<AddTask bind:modalOpened />
+	<TasksList {tasks} on:refetchTasks={fetchTasks} />
+	<AddTask bind:modalOpened on:refetchTasks={fetchTasks} />
 
 	<RightCorner>
 		<Button on:click={onOpenModal} size="lg">
