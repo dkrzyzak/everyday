@@ -3,6 +3,9 @@
 	import DeleteIcon from '~icons/mdi/delete';
 	import { toggleActiveState, updateName } from '../../stores/updateTasks';
 	import { createEventDispatcher } from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { onDestroy } from 'svelte';
+	import TransitionWrapper from '../../components/TransitionWrapper.svelte';
 
 	const dispatch = createEventDispatcher<{ deleteTask: { taskId: string } }>();
 
@@ -12,6 +15,7 @@
 	const initialActive = active;
 	const initialName = name;
 	console.log(initialName, initialActive);
+	export let disableAnimation = false;
 
 	const onToggleActive = () => {
 		active = !active;
@@ -29,40 +33,50 @@
 			taskId: id,
 		});
 	};
+
+	onDestroy(() => {
+		disableAnimation = true;
+	});
 </script>
 
-<div class="task-container">
-	<Text size="xl" weight={500} contenteditable spellcheck={false} on:blur={onNameBlur}
-		>{name}</Text
-	>
-
-	<div class="buttons-container">
-		{#if active}
-			<Badge
-				size="lg"
-				variant="light"
-				style="cursor: pointer;"
-				on:click={onToggleActive}>Aktywne</Badge
-			>
-		{:else}
-			<Badge
-				size="lg"
-				color="gray"
-				variant="light"
-				style="cursor: pointer;"
-				on:click={onToggleActive}>Nieaktywne</Badge
-			>
-		{/if}
-		<Button
-			size="sm"
-			compact
-			ripple
-			radius="lg"
-			color="red"
-			on:click={onDeleteIconClick}><DeleteIcon /></Button
+<TransitionWrapper
+	{disableAnimation}
+	transition={slide}
+	transitionOptions={{ axis: 'x', duration: 200 }}
+>
+	<div class="task-container">
+		<Text size="xl" weight={500} contenteditable spellcheck={false} on:blur={onNameBlur}
+			>{name}</Text
 		>
+
+		<div class="buttons-container">
+			{#if active}
+				<Badge
+					size="lg"
+					variant="light"
+					style="cursor: pointer;"
+					on:click={onToggleActive}>Aktywne</Badge
+				>
+			{:else}
+				<Badge
+					size="lg"
+					color="gray"
+					variant="light"
+					style="cursor: pointer;"
+					on:click={onToggleActive}>Nieaktywne</Badge
+				>
+			{/if}
+			<Button
+				size="sm"
+				compact
+				ripple
+				radius="lg"
+				color="red"
+				on:click={onDeleteIconClick}><DeleteIcon /></Button
+			>
+		</div>
 	</div>
-</div>
+</TransitionWrapper>
 
 <style>
 	.task-container {

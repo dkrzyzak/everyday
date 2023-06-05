@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import { Button } from '@svelteuidev/core';
 	import { Link } from 'svelte-routing';
 	import PlusIcon from '~icons/mdi/clipboard-plus';
@@ -13,6 +13,11 @@
 	let modalOpened = false;
 
 	let tasks: Task[] = [];
+	let disableAnimation = true;
+
+	$: if (tasks.length > 0) {
+		disableAnimation = false;
+	}
 
 	const fetchTasks = async () => {
 		try {
@@ -32,7 +37,7 @@
 
 <main class="page-container">
 	<h1>Edytuj zadania</h1>
-	<TasksList {tasks} on:refetchTasks={fetchTasks} />
+	<TasksList {tasks} {disableAnimation} on:refetchTasks={fetchTasks} />
 	<AddTask bind:modalOpened on:refetchTasks={fetchTasks} />
 
 	<RightCorner>
@@ -41,7 +46,14 @@
 			Dodaj zadanie
 		</Button>
 		<Link to="/">
-			<Button size="lg" variant="outline" style="width: 100%;">
+			<Button
+				size="lg"
+				variant="outline"
+				style="width: 100%;"
+				on:click={() => {
+					disableAnimation = true;
+				}}
+			>
 				<BackIcon style="font-size: 1.25em; margin-right: 5px;" />
 				Powrót
 			</Button>

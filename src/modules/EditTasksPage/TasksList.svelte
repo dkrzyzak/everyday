@@ -18,6 +18,7 @@
 	let taskToRemoveId = '';
 
 	export let tasks: Task[] = [];
+	export let disableAnimation = false;
 
 	const openConfirmDeleteModal = (event: CustomEvent<{ taskId: string }>) => {
 		confirmDeleteModalOpened = true;
@@ -44,7 +45,13 @@
 
 <div class="task-list-container">
 	{#each tasks as { name, active, _id } (_id)}
-		<TaskEditable {name} {active} id={_id} on:deleteTask={openConfirmDeleteModal} />
+		<TaskEditable
+			{name}
+			{active}
+			id={_id}
+			{disableAnimation}
+			on:deleteTask={openConfirmDeleteModal}
+		/>
 	{:else}
 		<Center>
 			<Loader size="lg" variant="dots" />

@@ -27,8 +27,10 @@
 		try {
 			const result = await addNewTask(taskName);
 			if (result) {
+				// TODO: komunikat z dodaniem?
 				success = true;
 				taskName = '';
+				closeModal();
 				dispatch('refetchTasks');
 			} else {
 				errorMsg = 'Nie udało się dodać zadania. Sprawdź konsolę.';
